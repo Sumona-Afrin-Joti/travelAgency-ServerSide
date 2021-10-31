@@ -82,6 +82,7 @@ async function run() {
         app.put('/bookings/:id', async(req,res)=>{
             const id = req.params.id;
             const updatedBooking = req.body;
+            console.log(updatedBooking);
             const filter = {_id:ObjectId(id)};
             const updateDoc = {
                 $set:{
@@ -102,7 +103,15 @@ async function run() {
             console.log('got new place', req.body);
             console.log('added place ', result);
             res.json(result);
-        })
+        });
+
+        app.get('/bookings/:id',async(req,res)=>{
+            const id = req.params.id;
+            console.log('hitted the id', id)
+            const query = {_id:ObjectId(id)};
+            const place = await bookingCollection.findOne(query);
+            res.json(place);
+        });
     }
     finally {
         // await client.close();
