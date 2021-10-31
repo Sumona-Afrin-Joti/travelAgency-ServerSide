@@ -70,7 +70,7 @@ async function run() {
 
         app.delete('/bookings/:id', async(req,res)=>{
             const id = req.params.id;
-            const query = {_id:Object(id)};
+            const query = {_id:ObjectId(id)};
             console.log('deleting user with id',id);
             const result = await bookingCollection.deleteOne(query);
            
@@ -82,7 +82,7 @@ async function run() {
         app.put('/bookings/:id', async(req,res)=>{
             const id = req.params.id;
             const updatedBooking = req.body;
-            const filter = {_id:Object(id)};
+            const filter = {_id:ObjectId(id)};
             const updateDoc = {
                 $set:{
                     status: updatedBooking.status,
