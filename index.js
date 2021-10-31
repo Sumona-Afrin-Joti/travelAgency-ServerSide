@@ -25,47 +25,74 @@ async function run() {
         const placeCollection = database.collection("Places");
         const bookingCollection = database.collection('bookings');
 
-       
         //GET API
 
-        app.get('/places', async (req, res) => {
+        app.get('/places', async(req,res)=>{
             const cursor = placeCollection.find({});
             const places = await cursor.toArray();
             res.send(places);
         });
 
-        // get signle booked Item 
+          // get signle booked Item 
 
-        app.get('/places/:id', async (req, res) => {
+          app.get('/places/:id', async(req,res)=>{
             const id = req.params.id;
-            const query = { _id: ObjectId(id) };
+            const query = {_id: ObjectId(id)};
             const place = await placeCollection.findOne(query);
             res.send(place);
         });
 
         //get all bookings
 
-        app.get('/bookings', async (req, res) => {
+        app.get('/bookings',async(req,res)=>{
             const cursor = bookingCollection.find({});
             const bookings = await cursor.toArray();
             res.send(bookings)
         });
-        // get a single user bookings
+          // get a single user bookings
 
-        app.get('/bookings/:email', async (req, res) => {
+          app.get('/bookings/:email',async(req,res)=>{
             const email = req.params.email;
-            const result = await bookingCollection.find({ Email: email }).toArray();
+            const result = await bookingCollection.find({Email:email}).toArray();
             res.json(result);
         });
 
 
         // make Collection of bookings
-        app.post('/bookings', async (req, res) => {
+        app.post('/bookings', async(req,res)=>{
             const booking = req.body;
             const result = await bookingCollection.insertOne(booking);
             res.json(result);
-
+            
         });
+
+        // find one place id for delete
+
+        app.delete('/bookings/:id', async(req,res)=>{
+            const id = req.params.id;
+            const query = {_id:Object(id)};
+            console.log('deleting user with id',id);
+            const result = await bookingCollection.deleteOne(query);
+           
+            console.log(result);
+            res.json(result);
+        });
+
+        //Update
+        app.put('/bookings/:id', async(req,res)=>{
+            const id = req.params.id;
+            const updatedBooking = req.body;
+            const filter = {_id:Object(id)};
+            const updateDoc = {
+                $set:{
+                    status: updatedBooking.status,
+                }
+            }
+            const result = await bookingCollection.updateOne(filter,updateDoc);
+            console.log('updating user with id',id);
+            console.log(result);
+            res.json(result)
+        })
 
          // POST API for inser new place in db
 
@@ -76,8 +103,6 @@ async function run() {
             console.log('added place ', result);
             res.json(result);
         })
-
-
     }
     finally {
         // await client.close();
