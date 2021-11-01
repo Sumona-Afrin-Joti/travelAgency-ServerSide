@@ -78,23 +78,6 @@ async function run() {
             res.json(result);
         });
 
-        //Update
-        app.put('/bookings/:id', async(req,res)=>{
-            const id = req.params.id;
-            const updatedBooking = req.body;
-            console.log(updatedBooking);
-            const filter = {_id:ObjectId(id)};
-            const updateDoc = {
-                $set:{
-                    status: updatedBooking.status,
-                }
-            }
-            const result = await bookingCollection.updateOne(filter,updateDoc);
-            console.log('updating user with id',id);
-            console.log(result);
-            res.json(result)
-        })
-
          // POST API for inser new place in db
 
          app.post('/places', async (req, res) => {
